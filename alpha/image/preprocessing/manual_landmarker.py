@@ -29,8 +29,8 @@ for img_name in os.listdir(Path('data_raw')):
 		if cv2.waitKey(1) == ord('q'):
 			# add landmarks to JSON file for specific image if landmarks were added
 			if landmarks != []:
-				with open(Path('data_marked/' + img_name + '.json'), 'w', encoding='utf-8') as f:
-					json.dump({img_name: landmarks}, f, ensure_ascii=False, indent=4)
+				with open(Path('truth/') / (img_name + '.json'), 'w', encoding='utf-8') as f:
+					json.dump(landmarks, f, ensure_ascii=False, indent=4)
 			break
 
 	cv2.destroyAllWindows()
