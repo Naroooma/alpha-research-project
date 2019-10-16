@@ -5,41 +5,32 @@ import math
 
 cap = cv2.VideoCapture(0)
 cap.open
+
+if not cap.isOpened():
+	raise Exception("Could not open video device")
+# Read picture. ret === True on success
+ret, frame = cap.read()
+
 while(cap.isOpened()):
 	# read image
 	ret, img = cap.read()
 
-	# convert to grayscale
-	grey = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+	# new = img - frame
 
 	img_YCrCb = cv2.cvtColor(img, cv2.COLOR_BGR2YCrCb)
 
 	# skin color range for hsv color space
 
-	# lab
-	YCrCb_mask = cv2.inRange(img_YCrCb, (0, 135, 90), (255, 200, 200))
+	YCrCb_mask = cv2.inRange(img_YCrCb, (0, 135, 85), (255, 180, 135))
 
-	# home
-	# YCrCb_mask = cv2.inRange(img_YCrCb, (0, 135, 110), (255, 157, 135))
+	YCrCb_mask = cv2.morphologyEx(YCrCb_mask, cv2.MORPH_OPEN, np.ones((5, 5), np.uint8))
 
-	# applying gaussian blur
-	value = (35, 35)
-	blurred = cv2.GaussianBlur(YCrCb_mask, value, 0)
+	blur = cv2.GaussianBlur(YCrCb_mask, (3, 3), 0)
 
-	# thresholdin: Otsu's Binarization method
-	_, thresh1 = cv2.threshold(blurred, 127, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
-	blurred2 = cv2.GaussianBlur(grey, value, 0)
+	_, thresh1 = cv2.threshold(blur, 127, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
 
-	# thresholdin: Otsu's Binarization maethod
-	_, thresh2 = cv2.threshold(blurred2, 127, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
-
-	thresh = thresh2 - thresh1
-
-	_, thresh = cv2.threshold(thresh, 127, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
-
-	thresh = cv2.bitwise_not(thresh)
-
-	contours, hierarchy = cv2.findContours(thresh.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
+	contours, hierarchy = cv2.findContours(thresh1.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
 
 	# find contour with max area
 	cnt = max(contours, key=lambda x: cv2.contourArea(x))
@@ -65,12 +56,42 @@ while(cap.isOpened()):
 	cv2.circle(img, extLeft, 8, (0, 0, 255), -1)
 	cv2.circle(img, extRight, 8, (0, 255, 0), -1)
 	cv2.circle(img, extTop, 8, (255, 0, 0), -1)
-	cv2.circle(img, extBot, 8, (255, 255, 0), -1)
+	# cv2.circle(img, extBot, 8, (255, 255, 0), -1)
 
-	cv2.imshow("threshold1", cv2.bitwise_not(thresh1))
-	cv2.imshow("threshold2", thresh2)
-	cv2.imshow("thresh", thresh)
 	cv2.imshow('image', img)
+	# show results
+
+	cv2.imshow("2_YCbCr.jpg", thresh1)
+	# cv2.imshow("2_YCbCr.jpg", new)
+
+	# background subtraction
+
+	# split into 3 channels
+
+	# thresholding
+
+	# binarizaton
+
+	# morphology
+
+	# addition
+
+	# morphology
+
+	# face removal
+
+	# canny edges segmentation
+
+	# skin extraciton
+
+	# morphology
+
+	# gaussian filter
+
 	if cv2.waitKey(1) == ord('q'):
 		break
+
+cap.release()
 cv2.destroyAllWindows()
+
+YCrCb_mask = cv2.inRange(img_YCrCb, (0, 135, 85), (255, 180, 135))
