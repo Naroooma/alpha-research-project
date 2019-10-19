@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 import time
 from hand_segmentation import skin_threshold, reg_threshold
-from landmark_finder import cursorpos
+from landmark_finder import pointer_pos
 
 
 cap = cv2.VideoCapture(0)
@@ -54,7 +54,8 @@ while(cap.isOpened()):
 		cv2.imshow("BGR", thresh_BGR)
 		cv2.imshow("global", thresh_global)
 		# find contour with max area
-		cursorpos.top_pos(img, thresh_global)
+		pointer_pos.far_pos(img, thresh_global)
+		# pointer_pos.top_pos(img, thresh_global)
 
 	else:
 		# draw squares until ranges are created

@@ -1,10 +1,6 @@
 import cv2
 import numpy as np
 import time
-# import sys
-# sys.path.append()
-
-fgbg = cv2.createBackgroundSubtractorMOG2()
 
 
 def draw_squares(img):
@@ -23,7 +19,6 @@ def draw_squares(img):
 	hand_rect_two_y = hand_rect_one_y + 10
 
 	for i in range(9):
-
 		cv2.rectangle(img, (hand_rect_one_y[i], hand_rect_one_x[i]), (hand_rect_two_y[i], hand_rect_two_x[i]), (0, 255, 0), 1)
 
 	return img
@@ -80,13 +75,6 @@ def skin_values_BGR(img):
 
 	# split color channels
 	return cv2.split(aoi)
-
-
-def movement_thresh(img):
-	fgmask = fgbg.apply(img)
-	blurred = cv2.GaussianBlur(fgmask, (5, 5), 0)
-	_, fgmask = cv2.threshold(blurred, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
-	return cv2.bitwise_not(fgmask)
 
 
 def face_extraction(img):

@@ -15,7 +15,7 @@ def movement_thresh(img):
 	return cv2.bitwise_not(fgmask)
 
 
-def YCrCb_mask(img):
+def YCrCb_thresh(img):
 	value = (35, 35)
 	img_YCrCb = cv2.cvtColor(img, cv2.COLOR_BGR2YCrCb)
 	YCrCb_mask = cv2.inRange(img_YCrCb, (0, 135, 90), (255, 200, 200))
@@ -29,7 +29,7 @@ def YCrCb_mask(img):
 	return thresh
 
 
-def HSV_mask(img):
+def HSV_thresh(img):
 	value = (35, 35)
 	img_HSV = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 	HSV_mask = cv2.inRange(img_HSV, (0, 135, 90), (255, 200, 200))
@@ -38,6 +38,20 @@ def HSV_mask(img):
 	_, thresh = cv2.threshold(blurred, 127, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
 
 	return thresh
+
+
+def gray_thresh(img):
+	# convert to grayscale
+	gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+	# applying gaussian blur
+	value = (35, 35)
+	blurred = cv2.GaussianBlur(gray, value, 0)
+
+	# thresholdin: Otsu's Binarization method
+	_, thresh = cv2.threshold(blurred, 127, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
+
+	return landmarker(thresh, img)
 
 
 def gaussian_thresh(img):

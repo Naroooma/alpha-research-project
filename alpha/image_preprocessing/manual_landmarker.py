@@ -5,7 +5,7 @@ from pathlib import Path
 
 
 # iterate over each image in data_raw directory
-for img_name in os.listdir(Path('data_raw')):
+for img_name in os.listdir(Path('data')):
 
 	landmarks = []
 
@@ -18,7 +18,7 @@ for img_name in os.listdir(Path('data_raw')):
 			print(x, y)
 
 	# open image
-	img = cv2.imread('data_raw/' + img_name, 10)
+	img = cv2.imread('data/' + img_name, 10)
 	cv2.imshow('image', img)
 	cv2.namedWindow('image')
 	cv2.setMouseCallback('image', draw_circle)
