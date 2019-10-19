@@ -12,10 +12,10 @@ global created_range
 created_range = False
 
 # create trackbars for color range expansion
-cv2.namedWindow('image')
-cv2.createTrackbar('BGR', 'image', 0, 500, skin_threshold.nothing)
-cv2.createTrackbar('HSV', 'image', 0, 500, skin_threshold.nothing)
-cv2.createTrackbar('YCrCb', 'image', 0, 500, skin_threshold.nothing)
+cv2.namedWindow('expansion')
+cv2.createTrackbar('BGR', 'expansion', 0, 500, skin_threshold.nothing)
+cv2.createTrackbar('HSV', 'expansion', 0, 500, skin_threshold.nothing)
+cv2.createTrackbar('YCrCb', 'expansion', 0, 500, skin_threshold.nothing)
 
 while(cap.isOpened()):
 	# read image
@@ -27,9 +27,9 @@ while(cap.isOpened()):
 		YCrCb_img = cv2.cvtColor(img, cv2.COLOR_BGR2YCrCb)
 		HSV_img = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 
-		BGR_expansion = cv2.getTrackbarPos('BGR', "image")
-		HSV_expansion = cv2.getTrackbarPos('HSV', "image")
-		YCrCb_expansion = cv2.getTrackbarPos('YCrCb', "image")
+		BGR_expansion = cv2.getTrackbarPos('BGR', "expansion")
+		HSV_expansion = cv2.getTrackbarPos('HSV', "expansion")
+		YCrCb_expansion = cv2.getTrackbarPos('YCrCb', "expansion")
 
 		# thresholding for each colorspace
 		thresh_HSV = cv2.inRange(HSV_img, (float(H.min()) - HSV_expansion, float(S.min()) - HSV_expansion, float(V.min()) - HSV_expansion),
@@ -48,15 +48,13 @@ while(cap.isOpened()):
 		# _, thresh_global = cv2.threshold(blurred_global, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
 		# thresh_global = cv2.bitwise_not()
 
-		cv2.imshow("f", thresh_move)
-		cv2.imshow("thresh1", thresh_HSV)
-		cv2.imshow("thresh2", thresh_YCrCb)
-		cv2.imshow("threshold", thresh_global)
-		cv2.imshow("thresh3", thresh_BGR)
-
-		time.sleep(0.1)
+		cv2.imshow("move", thresh_move)
+		cv2.imshow("HSV", thresh_HSV)
+		cv2.imshow("YCrCb", thresh_YCrCb)
+		cv2.imshow("BGR", thresh_BGR)
+		cv2.imshow("global", thresh_global)
 		# find contour with max area
-		img = cursorpos.top_pos(thresh_global, img)
+		cursorpos.top_pos(img, thresh_global)
 
 	else:
 		# draw squares until ranges are created
@@ -70,9 +68,7 @@ while(cap.isOpened()):
 			Y, Cr, Cb = skin_threshold.skin_values_YCrCb(img)
 			B, G, R = skin_threshold.skin_values_BGR(img)
 
-
-	cv2.imshow('i', img)
-
+	cv2.imshow('img', img)
 
 	if pressed == ord('q'):
 		break
