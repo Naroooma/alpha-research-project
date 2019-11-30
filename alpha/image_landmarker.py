@@ -16,12 +16,21 @@ for img_name in os.listdir(data_folder):
 	landmarks = []
 
 	img = cv2.imread(str(data_folder / img_name))
-	thresh = cv2.bitwise_not(reg_threshold.YCrCb_thresh(img))
-	landmarks = pointer_pos.top_pos(img, thresh)
+
+	gray = reg_threshold.gray_thresh(img)
+	hsv = reg_threshold.HSV_thresh(img)
+	ycrcb = reg_threshold.YCrCb_thresh(img)
+
+	globalt = cv2.bitwise_and(gray, cv2.bitwise_not(ycrcb))
+	faces = reg_threshold.face_extract(img)
+	for (x, y, w, h) in faces:
+		cv2.rectangle(globalt, (x - 10, y), (x + w, y + h + 100), (0, 0, 0), -1)
+
+	landmarks = pointer_pos.top_pos(img, globalt)
 	# open image until q is pressed
 	while True:
 		cv2.imshow('image', img)
-		cv2.imshow('thresh', thresh)
+		cv2.imshow('thresh', globalt)
 		if cv2.waitKey(1) == ord('q'):
 
 			# fixes error not sure why

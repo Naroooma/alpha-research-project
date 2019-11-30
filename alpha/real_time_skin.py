@@ -1,6 +1,5 @@
 import cv2
 import numpy as np
-import time
 from hand_segmentation import skin_threshold, reg_threshold
 from landmark_finder import pointer_pos
 
@@ -43,7 +42,9 @@ while(cap.isOpened()):
 
 		thresh_move = reg_threshold.movement_thresh(img)
 
-		thresh_global = cv2.bitwise_and(cv2.bitwise_and(thresh_YCrCb, thresh_BGR), thresh_HSV)
+		thresh_global = cv2.bitwise_and(thresh_YCrCb, thresh_HSV)
+		blurred = cv2.GaussianBlur(thresh_global, (35, 35), 0)
+		_, thresh_global = cv2.threshold(cv2.bitwise_not(blurred), 127, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
 		# blurred_global = cv2.GaussianBlur(thresh_global, (5, 5), 0)
 		# _, thresh_global = cv2.threshold(blurred_global, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
 		# thresh_global = cv2.bitwise_not()

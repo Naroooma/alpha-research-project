@@ -6,6 +6,15 @@ import os
 
 
 fgbg = cv2.createBackgroundSubtractorMOG2()
+face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+
+
+def face_extract(img):
+	faces = face_cascade.detectMultiScale(img, 1.1, 4)
+	fs = []
+	for (x, y, w, h) in faces:
+		fs.append((x, y, w, h))
+	return faces
 
 
 def movement_thresh(img):
@@ -32,7 +41,7 @@ def YCrCb_thresh(img):
 def HSV_thresh(img):
 	value = (35, 35)
 	img_HSV = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
-	HSV_mask = cv2.inRange(img_HSV, (0, 135, 90), (255, 200, 200))
+	HSV_mask = cv2.inRange(img_HSV, (100, 0, 0), (255, 255, 255))
 
 	blurred = cv2.GaussianBlur(HSV_mask, value, 0)
 	_, thresh = cv2.threshold(blurred, 127, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
@@ -51,7 +60,7 @@ def gray_thresh(img):
 	# thresholdin: Otsu's Binarization method
 	_, thresh = cv2.threshold(blurred, 127, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
 
-	return landmarker(thresh, img)
+	return thresh
 
 
 def gaussian_thresh(img):
@@ -65,6 +74,9 @@ def gaussian_thresh(img):
 
 
 def main():
+
+	cap = cv2.VideoCapture(2)
+	cap.open
 	while(cap.isOpened()):
 		# read image
 		ret, img = cap.read()
@@ -72,8 +84,8 @@ def main():
 		value = (35, 35)
 		# convert to grayscale
 		thresh_gaus = gaussian_thresh(img)
-		thresh_HSV = HSV_mask(img)
-		thresh_YCrCb = YCrCb_mask(img)
+		thresh_HSV = HSV_thresh(img)
+		thresh_YCrCb = YCrCb_thresh(img)
 
 		thresh_global = cv2.bitwise_not(thresh_HSV) - thresh_YCrCb
 

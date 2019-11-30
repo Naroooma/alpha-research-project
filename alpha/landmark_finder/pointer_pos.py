@@ -64,7 +64,7 @@ def far_pos(img, thresh):
 		far_defect = s[dist_max_i]
 		far_point = tuple(max_cont[far_defect][0])
 
-	print("Centroid : " + str((cx, cy)) + ", farthest Point : " + str(far_point))
+		print("Centroid : " + str((cx, cy)) + ", farthest Point : " + str(far_point))
 	cv2.circle(img, far_point, 5, (0, 0, 255), -1)
 	cv2.circle(img, (cx, cy), 8, (255, 0, 0), -1)
 
