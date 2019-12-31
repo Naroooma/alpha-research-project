@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 import time
+from hand_segmentation import reg_threshold
 
 
 def draw_squares(img):
@@ -77,8 +78,67 @@ def skin_values_BGR(img):
 	return cv2.split(aoi)
 
 
-def face_extraction(img):
-	return
+def HSV_thresh(img, H, S, V):
+	HSV_img = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+	HSV_skin_thresh = cv2.inRange(HSV_img, (float(H.min()), float(S.min()), float(V.min())),
+		(float(H.max()), float(S.max()), float(V.max())))
+
+	faces = reg_threshold.face_extract(img)
+	for (x, y, w, h) in faces:
+		cv2.rectangle(HSV_skin_thresh, (x - 10, y), (x + w, y + h + 100), (0, 0, 0), -1)
+
+	return HSV_skin_thresh
+
+
+def YCrCb_thresh(img, Y, Cr, Cb):
+	YCrCb_img = cv2.cvtColor(img, cv2.COLOR_BGR2YCrCb)
+	YCrCb_skin_thresh = cv2.inRange(YCrCb_img, (0, float(Cr.min()), float(Cb.min())),
+		(255, float(Cr.max()), float(Cb.max())))
+
+	faces = reg_threshold.face_extract(img)
+	for (x, y, w, h) in faces:
+		cv2.rectangle(YCrCb_skin_thresh, (x - 10, y), (x + w, y + h + 100), (0, 0, 0), -1)
+
+	return YCrCb_skin_thresh
+
+
+def BGR_thresh(img, B, G, R):
+	BGR_skin_thresh = cv2.inRange(img, (float(B.min()), float(G.min()), float(R.min())),
+		(float(B.max()), float(G.max()), float(R.max())))
+
+	faces = reg_threshold.face_extract(img)
+	for (x, y, w, h) in faces:
+		cv2.rectangle(BGR_skin_thresh, (x - 10, y), (x + w, y + h + 100), (0, 0, 0), -1)
+
+	return BGR_skin_thresh
+
+
+def HSV_BGR_thresh(HSV_skin_thresh, BGR_skin_thresh):
+	return cv2.bitwise_and(HSV_skin_thresh, BGR_skin_thresh)
+
+
+def HSV_YCrCb_thresh(HSV_skin_thresh, YCrCb_skin_thresh):
+	return cv2.bitwise_and(HSV_skin_thresh, YCrCb_skin_thresh)
+
+
+def YCrCb_BGR_thresh(YCrCb_skin_thresh, BGR_skin_thresh):
+	return cv2.bitwise_and(BGR_skin_thresh, YCrCb_skin_thresh)
+
+
+def all_thresh(HSV_YCrCb, BGR_skin_thresh):
+	return cv2.bitwise_and(HSV_YCrCb, BGR_skin_thresh)
+
+
+def all_otsu(all_thresh_reg):
+	blurred = cv2.GaussianBlur(all_thresh_reg, (35, 35), 0)
+	_, all_thresh_otsu = cv2.threshold(cv2.bitwise_not(blurred), 127, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
+	return all_thresh_otsu
+
+
+def all_binary(all_thresh_reg):
+	blurred = cv2.GaussianBlur(all_thresh_reg, (35, 35), 0)
+	_, all_thresh_binary = cv2.threshold(cv2.bitwise_not(blurred), 127, 255, cv2.THRESH_BINARY_INV)
+	return all_thresh_binary
 
 
 def nothing(x):

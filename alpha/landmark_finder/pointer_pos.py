@@ -37,18 +37,25 @@ def top_pos(img, thresh):
 def far_pos(img, thresh):
 	contours, hierarchy = cv2.findContours(thresh.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
 	# find contour with max area
-	max_cont = max(contours, key=lambda x: cv2.contourArea(x))
-
+	try:
+		max_cont = max(contours, key=lambda x: cv2.contourArea(x))
+	except ValueError:
+		return 0, 0
 	# find centroid
 	moment = cv2.moments(max_cont)
 	cx = int(moment['m10'] / moment['m00'])
 	cy = int(moment['m01'] / moment['m00'])
-	cv2.circle(img, (cx, cy), 5, [255, 0, 255], -1)
 
-	hull = cv2.convexHull(max_cont, returnPoints=False)
+	hull1 = cv2.convexHull(max_cont, returnPoints=False)
+	hull2 = cv2.convexHull(max_cont, returnPoints=True)
+
+	# cv2.drawContours(img, [max_cont], 0, (0, 255, 0), 0)
+	# cv2.drawContours(img, [hull2], 0, (0, 0, 255), 0)
 
 	# find defects in max contour
-	defects = cv2.convexityDefects(max_cont, hull)
+	defects = cv2.convexityDefects(max_cont, hull1)
+	if defects is None:
+		return 0, 0
 
 	# find farthest point
 	s = defects[:, 0][:, 0]
@@ -64,8 +71,8 @@ def far_pos(img, thresh):
 		far_defect = s[dist_max_i]
 		far_point = tuple(max_cont[far_defect][0])
 
-		print("Centroid : " + str((cx, cy)) + ", farthest Point : " + str(far_point))
-	cv2.circle(img, far_point, 5, (0, 0, 255), -1)
-	cv2.circle(img, (cx, cy), 8, (255, 0, 0), -1)
+		cv2.circle(img, far_point, 5, (0, 0, 255), -1)
+		# cv2.circle(img, (cx, cy), 8, (255, 0, 0), -1)
 
-	return far_point
+		return far_point
+	return 0, 0

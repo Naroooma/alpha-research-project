@@ -1,0 +1,83 @@
+Folder PATH listing for volume OS
+Volume serial number is 4241-C5CD
+C:.
+|   .gitignore
+|   LICENSE
+|   output.txt
+|   README.md
+|   
+\---alpha
+    |   image_landmarker.py
+    |   real_time_reg.py
+    |   real_time_skin.py
+    |   
+    +---hand_segmentation
+    |   |   reg_threshold.py
+    |   |   skin_threshold.py
+    |   |   
+    |   \---__pycache__
+    |           reg_threshold.cpython-37.pyc
+    |           skin_threshold.cpython-37.pyc
+    |           skin_threshold_algorithims.cpython-37.pyc
+    |           
+    +---HCI
+    |   |   cursor.py
+    |   |   
+    |   \---__pycache__
+    |           cursor.cpython-37.pyc
+    |           
+    +---image_preprocessing
+    |   |   loss.py
+    |   |   manual_landmarker.py
+    |   |   success_percent.py
+    |   |   
+    |   +---data
+    |   |   +---alpha_data
+    |   |   +---alpha_white
+    |   |   +---calibration_data
+    |   |   +---calibration_white
+    |   |   +---kinect_leap
+    |   |   \---senz3d
+    |   +---results
+    |   |   +---alpha_data
+    |   |   +---alpha_white
+    |   |   +---calibration_data
+    |   |   |   +---all_thresh_binary
+    |   |   |   +---all_thresh_otsu
+    |   |   |   +---all_thresh_reg
+    |   |   |   +---BGR_skin_thresh
+    |   |   |   +---HSV_BGR
+    |   |   |   +---HSV_skin_thresh
+    |   |   |   +---HSV_YCrCb
+    |   |   |   +---YCrCb_BGR
+    |   |   |   +---YCrCb_skin_thresh
+    |   |   |   +---YCrCb_thresh_5
+    |   |   |   \---YCrCb_thresh_6
+    |   |   +---calibration_white
+    |   |   |   +---all_thresh_binary
+    |   |   |   +---all_thresh_otsu
+    |   |   |   +---all_thresh_reg
+    |   |   |   +---BGR_skin_thresh
+    |   |   |   +---HSV_BGR
+    |   |   |   +---HSV_skin_thresh
+    |   |   |   +---HSV_YCrCb
+    |   |   |   +---YCrCb_BGR
+    |   |   |   +---YCrCb_skin_thresh
+    |   |   |   +---YCrCb_thresh_5
+    |   |   |   \---YCrCb_thresh_6
+    |   |   +---kinect_leap
+    |   |   \---senz3d
+    |   \---truth
+    |       +---alpha_data
+    |       +---alpha_white
+    |       +---calibration_data
+    |       +---calibration_white
+    |       +---kinect_leap
+    |       \---senz3d
+    \---landmark_finder
+        |   pointer_pos.py
+        |   
+        \---__pycache__
+                cursorpos.cpython-37.pyc
+                pointer_pos.cpython-37.pyc
+                

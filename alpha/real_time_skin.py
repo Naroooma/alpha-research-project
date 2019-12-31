@@ -1,4 +1,7 @@
 import cv2
+import json
+import os
+from pathlib import Path
 import numpy as np
 from hand_segmentation import skin_threshold, reg_threshold
 from landmark_finder import pointer_pos
@@ -7,14 +10,14 @@ from landmark_finder import pointer_pos
 cap = cv2.VideoCapture(0)
 cap.open
 
+data_folder = Path(os.getcwd()) / "image_preprocessing/data" / "calibration_data"
+results_folder = Path(os.getcwd()) / "image_preprocessing/results" / "calibration_data"
+
+pictures_taken = 0
+threshs = ['HSV_skin_thresh', 'YCrCb_skin_thresh', 'BGR_skin_thresh', 'HSV_BGR', 'HSV_YCrCb', 'YCrCb_BGR', 'all_thresh_binary', 'all_thresh_reg', 'all_thresh_otsu']
+
 global created_range
 created_range = False
-
-# create trackbars for color range expansion
-cv2.namedWindow('expansion')
-cv2.createTrackbar('BGR', 'expansion', 0, 500, skin_threshold.nothing)
-cv2.createTrackbar('HSV', 'expansion', 0, 500, skin_threshold.nothing)
-cv2.createTrackbar('YCrCb', 'expansion', 0, 500, skin_threshold.nothing)
 
 while(cap.isOpened()):
 	# read image
@@ -22,41 +25,47 @@ while(cap.isOpened()):
 	pressed = cv2.waitKey(1)
 
 	if created_range:
-		# create YCrCb and HSV image for current frame
-		YCrCb_img = cv2.cvtColor(img, cv2.COLOR_BGR2YCrCb)
-		HSV_img = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
-
-		BGR_expansion = cv2.getTrackbarPos('BGR', "expansion")
-		HSV_expansion = cv2.getTrackbarPos('HSV', "expansion")
-		YCrCb_expansion = cv2.getTrackbarPos('YCrCb', "expansion")
 
 		# thresholding for each colorspace
-		thresh_HSV = cv2.inRange(HSV_img, (float(H.min()) - HSV_expansion, float(S.min()) - HSV_expansion, float(V.min()) - HSV_expansion),
-			(float(H.max()) + HSV_expansion, float(S.max()) + HSV_expansion, float(V.max()) + HSV_expansion))
+		HSV_skin_thresh = skin_threshold.HSV_thresh(img, H, S, V)
+		YCrCb_skin_thresh = skin_threshold.YCrCb_thresh(img, Y, Cr, Cb)
+		BGR_skin_thresh = skin_threshold.BGR_thresh(img, B, G, R)
 
-		thresh_YCrCb = cv2.inRange(YCrCb_img, (float(Y.min() - YCrCb_expansion), float(Cr.min()) - YCrCb_expansion, float(Cb.min()) - YCrCb_expansion),
-			(float(Y.max()) + YCrCb_expansion, float(Cr.max()) + YCrCb_expansion, float(Cb.max()) + YCrCb_expansion))
+		# create thresholding combinations
+		HSV_YCrCb = skin_threshold.HSV_YCrCb_thresh(HSV_skin_thresh, YCrCb_skin_thresh)
+		HSV_BGR = skin_threshold.HSV_BGR_thresh(HSV_skin_thresh, BGR_skin_thresh)
+		YCrCb_BGR = skin_threshold.YCrCb_BGR_thresh(YCrCb_skin_thresh, BGR_skin_thresh)
+		all_thresh_reg = skin_threshold.all_thresh(HSV_YCrCb, BGR_skin_thresh)
 
-		thresh_BGR = cv2.inRange(img, (float(B.min()) - BGR_expansion, float(G.min()) - BGR_expansion, float(R.min()) - BGR_expansion),
-			(float(B.max()) + BGR_expansion, float(G.max()) + BGR_expansion, float(R.max()) + BGR_expansion))
+		# Global Threshold + Otsu's Binarization
+		all_thresh_otsu = skin_threshold.all_otsu(all_thresh_reg)
+		all_thresh_binary = skin_threshold.all_binary(all_thresh_reg)
 
-		thresh_move = reg_threshold.movement_thresh(img)
+		# show threshs
+		cv2.imshow("HSV", HSV_skin_thresh)
+		cv2.imshow("YCrCb", YCrCb_skin_thresh)
+		cv2.imshow("BGR", BGR_skin_thresh)
+		cv2.imshow("global", all_thresh_reg)
 
-		thresh_global = cv2.bitwise_and(thresh_YCrCb, thresh_HSV)
-		blurred = cv2.GaussianBlur(thresh_global, (35, 35), 0)
-		_, thresh_global = cv2.threshold(cv2.bitwise_not(blurred), 127, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
-		# blurred_global = cv2.GaussianBlur(thresh_global, (5, 5), 0)
-		# _, thresh_global = cv2.threshold(blurred_global, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
-		# thresh_global = cv2.bitwise_not()
+		# pointer_pos.top_pos(img, all_thresh)
+		if pictures_taken % 5 == 0 and pictures_taken / 5 <= 50 and pictures_taken != 0:
+			# save photo into data folder
+			cv2.imwrite(os.path.join(data_folder, (str(int(pictures_taken / 5)) + ".jpg")), img)
 
-		cv2.imshow("move", thresh_move)
-		cv2.imshow("HSV", thresh_HSV)
-		cv2.imshow("YCrCb", thresh_YCrCb)
-		cv2.imshow("BGR", thresh_BGR)
-		cv2.imshow("global", thresh_global)
-		# find contour with max area
-		pointer_pos.far_pos(img, thresh_global)
-		# pointer_pos.top_pos(img, thresh_global)
+			# iterate over all thresholds
+			for thresh in threshs:
+				# convert thresh name to actual thresh
+				exec("%s = %s" % ("thresh_var", thresh))
+
+				# find landmarks based on threshold
+				landmarks = pointer_pos.far_pos(img, thresh_var)
+				landmarks = np.ndarray.tolist(np.array(landmarks))
+				# save landmarks to corresponding json file for image
+				with open(results_folder / str(thresh) / (str(int(pictures_taken / 5)) + '.jpg.json'), 'w', encoding='utf-8') as f:
+					json.dump(landmarks, f, ensure_ascii=False, indent=4)
+
+		print(pictures_taken)
+		pictures_taken += 1
 
 	else:
 		# draw squares until ranges are created
