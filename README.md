@@ -6,7 +6,7 @@ Alpha Research Project: Hand Detection and Tracking, using an RGB camera, for Ba
 עבודת חקר בתוכנית "אלפא": זיהוי ומעקב היד ותנועתה, באמצעות מצלמצת RGB, למטרת שליטה במחשב
 </div>
 
-<a href="https://drive.google.com/file/d/1ibmjMPVQLqvh7tMHUxT2VuWyf30ugcjh/view?usp=sharing"> Press for full Project Booklet</a>
+<a href="https://drive.google.com/file/d/1ibmjMPVQLqvh7tMHUxT2VuWyf30ugcjh/view?usp=sharing"> Project Booklet (with full results and details)</a>
 
 ## Introduction
 <p dir="rtl" style="text-align: right">
@@ -82,11 +82,6 @@ Alpha Research Project: Hand Detection and Tracking, using an RGB camera, for Ba
 
 <p dir="rtl" style="text-align: right">
 ניתן להמשיך ולשפר בדרכים שונות את היכולת של המערכת להפריד את היד, למצוא נקודות סימון, ולשלב הפעלה של פעולות מחשב יותר מורכבות.
-
-</p>
-
-<p dir="rtl" style="text-align: right">
-במסגרת עבודה זו, אמנם לא נעשו ניסויים המבוססים על למידת מחשב, אך נעשתה סקירת ספרות מעמיקה בנושא. עם שיפורים ביכולת הפרדת היד, מערכות המבוססות על למידת מחשב יוכלו לייעל את תהליך מציאת נקודת הסימון, וזיהוי תנוחות ותנועות שלהם, ואכן נראה שעם מחקר נוסף, תוכל להיבנות מערכת HCI מלאה.
 
 </p>
 
