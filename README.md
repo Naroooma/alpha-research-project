@@ -1,5 +1,5 @@
 
-# Alpha-Research-Project
+# Alpha Research Project
 Alpha Research Project: Hand Detection and Tracking, using an RGB camera, for Basic Human Computer Interface
 
 <div dir="rtl">
