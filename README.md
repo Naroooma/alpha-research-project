@@ -9,7 +9,7 @@ Alpha Research Project: Hand Detection and Tracking, using an RGB camera, for Ba
 ## Files
 
 
-## Introfuction
+## Introduction
 <div dir="rtl">
 מטרת המחקר היא לבנות תוכנה, המאפשרת שליטה ותזוזה של הסמן (cursor) על ידי האצבע, באמצעות שימוש במצלמה. על התוכנה להפריד את שטח היד, מצילום בזמן אמת, ולאתר נקודת סימון המייצגת את מיקום הסמן. בעבודה זו, נחקרו לעומק ונערכנו ניסיונות על כמה שיטות להפרדת היד על מנת להגיע לשיטה יחידה שתוכל לעבוד במקרים רבים.
 
@@ -23,6 +23,6 @@ Alpha Research Project: Hand Detection and Tracking, using an RGB camera, for Ba
 בנוסף, נבנתה מערכת להגדרת תחום הפרדה המותאם למשתמש. בהפעלה הראשונית של התוכנה, נלקחת "דגימה" של פיקסלים צבע עור, וכל מה שאינו תואם לדגימה הזו, ונמצא בתחום שנוצר, מוסר מהתמונה.
 
 </div>
-![stuff](readme%20images/תמונה1.png)
+![](readme-images/1.png)
 
 
