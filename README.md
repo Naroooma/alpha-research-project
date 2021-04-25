@@ -23,6 +23,6 @@ Alpha Research Project: Hand Detection and Tracking, using an RGB camera, for Ba
 בנוסף, נבנתה מערכת להגדרת תחום הפרדה המותאם למשתמש. בהפעלה הראשונית של התוכנה, נלקחת "דגימה" של פיקסלים צבע עור, וכל מה שאינו תואם לדגימה הזו, ונמצא בתחום שנוצר, מוסר מהתמונה.
 
 </div>
-![תיאורים ויזואלים של מרחב צבע HSV (ימין), ו- YCbCr (שמאל) שנעשה בהם שימוש בעבודה![image](./readme imags/תמונה 4)
-](Isolated.png "Title")
+![image info](./readme images/תמונה 1.png)
+
 
