@@ -6,6 +6,7 @@ Alpha Research Project: Hand Detection and Tracking, using an RGB camera, for Ba
 עבודת חקר בתוכנית "אלפא": זיהוי ומעקב היד ותנועתה, באמצעות מצלמצת RGB, למטרת שליטה במחשב
 </div>
 
+
 <a href="https://drive.google.com/file/d/1ibmjMPVQLqvh7tMHUxT2VuWyf30ugcjh/view?usp=sharing"> Project Booklet (with full results and details)</a>
 
 ## Introduction
